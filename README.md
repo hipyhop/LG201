@@ -6,7 +6,8 @@ Table of contents
   * [Prerequisites](#prerequisites)
     * [Local Docker registry](#local-docker-registry)
   * [Solution](#solution)
-  *
+    * [Issues](#issues)
+      * [Duplicated provisioning](#duplicated-provisioning)
 
 ## Prerequisites
 To run these examples the following must be configured on the local host:
@@ -52,3 +53,20 @@ If it any point in the future more docker hosts need to be added, just edit the 
 The next time vagrant up is run the Ansible inventory file will be updated.
 
 See lines 33-35 of `haproxy/haproxy.cfg.j2` to see how the HAProxy configuration is dynamically generated from the Ansible inventory file.
+
+### Issues
+
+#### Duplicated provisioning
+
+In the current setup, vagrant runs the Ansible playbook after each host definition, resulting in a lot of duplicated effort.
+
+This isn't a huge problem, since Ansible modules are smart about the defined tasks and can check if anything needs doing, however this still introduces a significant delay to the up-provision loop.
+
+It looks like I'm not the only person to face this issue: [https://github.com/mitchellh/vagrant/issues/1784](https://github.com/mitchellh/vagrant/issues/1784)
+A few suggestions were offered, but I couldn't find a decent solution.
+
+The best way around it appears to be separating the spin-up and provisioning steps:
+
+```
+$ vagrant up --no-provision && vagrant provision
+```
