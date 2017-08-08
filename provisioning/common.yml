@@ -22,6 +22,19 @@
         restart_policy: on-failure
         restart_retries: 10
 
+    # now deploy the two apps from the registry
+    - name: Start Go application server
+      become: true
+      docker_container:
+        #auto_remove: yes #Not available until ansible v2.4
+        image: "{{docker_registry}}/go_app:latest"
+        name: go_app
+        ports: 8080:8080
+        pull: true # always check for the latest version
+        restart: true
+        restart_policy: on-failure
+        restart_retries: 10
+
 # End docker-hosts section
 
 - hosts: loadbalancers

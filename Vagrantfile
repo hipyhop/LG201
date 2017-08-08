@@ -22,7 +22,8 @@ Vagrant.configure("2") do |config|
     ansible.groups = {
       "docker_hosts" => (1..N_DOCKERHOSTS).map {|n| "docker-" + n.to_s},
       "docker_hosts:vars" => {
-          "js_port" => 3000
+          "js_port" => 3000,
+          "go_port" => 8080
       },
       "loadbalancers" => [ "lb-1" ]
     }
