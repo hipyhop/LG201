@@ -10,6 +10,12 @@
     - ca-certificates
     - curl
     - software-properties-common
+    - python-pip
+
+- name: Install the docker-py package as required by the docker_container ansible module
+  become: true
+  pip:
+    name: docker-py
 
 - name: Add Docker GPG Key
   # Official docker GPG url doesn't work with apt_key, possible SNI issue
