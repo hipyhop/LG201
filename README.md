@@ -5,6 +5,7 @@ Table of contents
 
   * [Prerequisites](#prerequisites)
     * [Local Docker registry](#local-docker-registry)
+  * [Task 1](#task-1)
   * [Solution](#solution)
     * [Issues](#issues)
       * [Duplicated provisioning](#duplicated-provisioning)
@@ -34,6 +35,12 @@ $ docker run -d -p 5000:5000 --restart=always --name registry registry:2
 ```
 
 **Note:** for speed, this registry is not configured securely and is not production-ready in this form. In a real-world scenario, the registry should be secured with TLS and require authentication if it's externally accessible.
+
+## Task 1
+
+This is the solution to task 2, to see the solution to task 1 checkout tag `task1` in this repository.
+
+Alternatively you can view it in the browser here [https://github.com/hipyhop/LG201/tree/task1](https://github.com/hipyhop/LG201/tree/task1).
 
 ## Solution
 
