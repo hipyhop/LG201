@@ -1,6 +1,6 @@
 ---
 
-- hosts: docker-hosts
+- hosts: docker_hosts
 
   vars:
     docker_registry: 192.168.0.17:5000

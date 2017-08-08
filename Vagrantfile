@@ -19,13 +19,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
-      "docker-hosts" => (1..N_DOCKERHOSTS).map {|n| "docker-" + n.to_s},
-      "docker-hosts:vars" => {
           "http_port" => 80
+      "docker_hosts" => (1..N_DOCKERHOSTS).map {|n| "docker-" + n.to_s},
+      "docker_hosts:vars" => {
       },
       "loadbalancers" => [ "lb-1" ]
     }
-    ansible.playbook = "common.yml"
+    ansible.playbook = "provisioning/common.yml"
     ansible.limit = "all"
     #ansible.verbose = "vvv"
   end
