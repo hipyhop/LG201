@@ -4,16 +4,35 @@ Table of contents
 =================
 
   * [Prerequisites](#prerequisites)
+    * [Local Docker registry](#local-docker-registry)
   * [Solution](#solution)
+  *
 
 ## Prerequisites
 To run these examples the following must be configured on the local host:
   * [Vagrant](https://www.vagrantup.com/downloads.html)
   * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
   * [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
+  * [Docker](https://www.docker.com/get-docker)
 
 All solutions were implemented on OS X Sierra and due to time constraints have not been tested on any other platforms.
 The benefit of using virtualisation technologies here means it should work on other platforms with no changes, however YMMV.
+
+### Local docker registry
+
+For this example, a local docker registry will be used for speed and ease of development.
+
+This won't be covered by the ansible automation so will need to be setup before running any commands.
+
+If you already have a suitable docker registry, go ahead and skip this step, but change the `docker_registry` variable in the ansible playbook files.
+
+To set up a docker registry on the host machine run
+
+```
+$ docker run -d -p 5000:5000 --restart=always --name registry registry:2
+```
+
+**Note:** for speed, this registry is not configured securely and is not production-ready in this form. In a real-world scenario, the registry should be secured with TLS and require authentication if it's externally accessible.
 
 ## Solution
 
@@ -26,10 +45,10 @@ vagrant up
 **What does this do?**
 
   1. Launches three `ubuntu/trusty64` guests within the same private network and creates an Ansible inventory file.
-  1. This inventory files groups two hosts as web servers, and the other as a load balancer.
+  1. This inventory files groups two hosts as docker-hosts, and the other as a load balancer.
   1. Then the Ansible playbook `common.yml` is used to provision these hosts. See this file for more information on the provisioning process.
 
-If it any point in the future more web servers need to be added, just edit the `N_WEBSERVERS` variable in the `Vagrantfile`.
+If it any point in the future more docker hosts need to be added, just edit the `N_DOCKERHOSTS` variable in the `Vagrantfile`.
 The next time vagrant up is run the Ansible inventory file will be updated.
 
 See lines 33-35 of `haproxy/haproxy.cfg.j2` to see how the HAProxy configuration is dynamically generated from the Ansible inventory file.

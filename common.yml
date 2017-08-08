@@ -1,28 +1,18 @@
 ---
 
-- hosts: webservers
+- hosts: docker-hosts
+
+  vars:
+    docker_registry: 192.168.0.17:5000
 
   tasks:
-    - name: Ensure apache is installed and up to date
-      become: true
-      apt:
-        name: apache2
-        state: latest
-        update_cache: yes
+    # Setup docker on the docker hosts
+    - include: provision_docker_hosts.yml
 
-    - name: Add static index.html and inject hostname into page
       become: true
-      template:
-        src: web/index.html.j2
-        dest: /var/www/html/index.html
-      notify: start apache
 
-  handlers:
-    - name: start apache
-      service:
-        name: apache2
-        state: started
-        enabled: yes # start on boot
+
+# End docker-hosts section
 
 - hosts: loadbalancers
 

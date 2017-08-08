@@ -2,13 +2,13 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
   # How many webserver should be launched
-  N_WEBSERVERS = 2
+  N_DOCKERHOSTS = 2
 
-  (1..N_WEBSERVERS).each do |machine_id|
+  (1..N_DOCKERHOSTS).each do |machine_id|
 
-    config.vm.define "ws-#{machine_id}" do |instance|
+    config.vm.define "docker-#{machine_id}" do |instance|
       instance.vm.network "private_network", ip: "192.168.32.#{20+machine_id}"
-      instance.vm.hostname = "web-#{machine_id}"
+      instance.vm.hostname = "docker-#{machine_id}"
     end
 
   end
@@ -19,8 +19,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
-      "webservers" => (1..N_WEBSERVERS).map {|n| "ws-" + n.to_s},
-      "webservers:vars" => {
+      "docker-hosts" => (1..N_DOCKERHOSTS).map {|n| "docker-" + n.to_s},
+      "docker-hosts:vars" => {
           "http_port" => 80
       },
       "loadbalancers" => [ "lb-1" ]
