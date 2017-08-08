@@ -13,13 +13,16 @@ Vagrant.configure("2") do |config|
 
   end
 
-  # config.vm.define "lb-1" do |instance|
-  #   instance.vm.network "private_network", ip: "192.168.32.10"
-  # end
+  config.vm.define "lb-1" do |instance|
+    instance.vm.network "private_network", ip: "192.168.32.10"
+  end
 
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
       "webservers" => (1..N_WEBSERVERS).map {|n| "ws-" + n.to_s},
+      "webservers:vars" => {
+          "http_port" => 80
+      },
       "loadbalancers" => [ "lb-1" ]
     }
     ansible.playbook = "common.yml"

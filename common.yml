@@ -16,3 +16,36 @@
         name: apache2
         state: started
         enabled: yes # start on boot
+
+- hosts: loadbalancers
+
+  tasks:
+    - name: Ensure HAProxy is installed and up to date
+      become: true
+      apt:
+        name: haproxy
+        state: latest
+        update_cache: yes
+
+    - name: Configure haproxy cnf file with hosts
+      become: true
+      template:
+        src: haproxy/haproxy.cfg.j2
+        dest: /etc/haproxy/haproxy.cfg
+
+    - name: Enable haproxy
+      # toggles the ENABLED flag in /etc/default/haproxy
+      become: true
+      replace:
+        dest: /etc/default/haproxy
+        regexp: "ENABLED=0"
+        replace: "ENABLED=1"
+      notify: restart haproxy
+
+  handlers:
+    - name: restart haproxy
+      become: true
+      service:
+        name: haproxy
+        state: restarted
+        enabled: true

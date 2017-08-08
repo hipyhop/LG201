@@ -1,0 +1,35 @@
+global
+    log         127.0.0.1 local2
+
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        root
+    group       root
+    daemon
+
+    # turn on stats unix socket
+    stats socket /var/lib/haproxy/stats level admin
+
+defaults
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option http-server-close
+    option                  redispatch
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          1m
+    timeout server          1m
+    timeout http-keep-alive 10s
+    timeout check           10s
+
+listen app 0.0.0.0:80
+    option forwardfor
+    balance roundrobin
+    {% for host in groups.webservers %}
+    server {{ host }} {{ hostvars[host].ansible_eth1.ipv4.address }}:{{ hostvars[host].http_port }} check
+    {% endfor %}
