@@ -1,0 +1,18 @@
+---
+
+- hosts: webservers
+
+  tasks:
+    - name: Ensure apache is installed and up to date
+      become: true
+      apt:
+        name: apache2
+        state: latest
+        update_cache: yes
+
+  handlers:
+    - name: start apache
+      service:
+        name: apache2
+        state: started
+        enabled: yes # start on boot
