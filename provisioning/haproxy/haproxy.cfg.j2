@@ -27,9 +27,20 @@ defaults
     timeout http-keep-alive 10s
     timeout check           10s
 
-listen app 0.0.0.0:80
-    option forwardfor
+frontend http
+    bind *:80
+    mode http
+    acl url_js path_beg /js
+
+    use_backend js if url_js
+
+    #default_backend web-backend
+
+backend js
     balance roundrobin
-    {% for host in groups.webservers %}
-    server {{ host }} {{ hostvars[host].ansible_eth1.ipv4.address }}:{{ hostvars[host].http_port }} check
+    mode http
+    reqrep ^([^\ ]*\ /)js[/]?(.*)     \1\2
+
+    {% for host in groups.docker_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_eth1.ipv4.address }}:{{ hostvars[host].js_port }} check
     {% endfor %}

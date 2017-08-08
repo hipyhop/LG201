@@ -13,15 +13,16 @@ Vagrant.configure("2") do |config|
 
   end
 
+
   config.vm.define "lb-1" do |instance|
     instance.vm.network "private_network", ip: "192.168.32.10"
   end
 
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
-          "http_port" => 80
       "docker_hosts" => (1..N_DOCKERHOSTS).map {|n| "docker-" + n.to_s},
       "docker_hosts:vars" => {
+          "js_port" => 3000
       },
       "loadbalancers" => [ "lb-1" ]
     }
