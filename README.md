@@ -28,3 +28,6 @@ vagrant up
   1. Launches three `ubuntu/trusty64` guests within the same private network and creates an Ansible inventory file.
   1. This inventory files groups two hosts as web servers, and the other as a load balancer.
   1. Then the Ansible playbook `common.yml` is used to provision these hosts. See this file for more information on the provisioning process.
+
+If it any point in the future more web servers needs to be added, just edit the `N_WEBSERVERS` variable in the `Vagrantfile`.
+The next time vagrant up is run the ansible inventory file will be updated.
