@@ -9,8 +9,18 @@
     # Setup docker on the docker hosts
     - include: provision_docker_hosts.yml
 
+    # now deploy the two apps from the registry
+    - name: Start Node.js server
       become: true
-
+      docker_container:
+        #auto_remove: yes #Not available until ansible v2.4
+        image: "{{docker_registry}}/node_app:latest"
+        name: node_app
+        ports: 3000:3000
+        pull: true # always check for the latest version
+        restart: true
+        restart_policy: on-failure
+        restart_retries: 10
 
 # End docker-hosts section
 
