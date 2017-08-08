@@ -31,8 +31,10 @@ frontend http
     bind *:80
     mode http
     acl url_js path_beg /js
+    acl url_go path_beg /go
 
     use_backend js if url_js
+    use_backend go if url_go
 
     #default_backend web-backend
 
@@ -43,4 +45,12 @@ backend js
 
     {% for host in groups.docker_hosts %}
     server {{ host }} {{ hostvars[host].ansible_eth1.ipv4.address }}:{{ hostvars[host].js_port }} check
+    {% endfor %}
+
+backend go
+    balance roundrobin
+    mode http
+    reqrep ^([^\ ]*\ /)go[/]?(.*)     \1\2
+    {% for host in groups.docker_hosts %}
+    server {{ host }} {{ hostvars[host].ansible_eth1.ipv4.address }}:{{ hostvars[host].go_port }} check
     {% endfor %}
