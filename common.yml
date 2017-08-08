@@ -10,6 +10,13 @@
         state: latest
         update_cache: yes
 
+    - name: Add static index.html and inject hostname into page
+      become: true
+      template:
+        src: web/index.html.j2
+        dest: /var/www/html/index.html
+      notify: start apache
+
   handlers:
     - name: start apache
       service:
