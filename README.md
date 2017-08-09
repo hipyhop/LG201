@@ -10,7 +10,7 @@ Table of contents
   - [Building the applications with Docker](#building-the-applications-with-docker)
   - [Deploying the containers with vagrant](#deploying-the-containers-with-vagrant)
   - [Issues](#issues)
-  - [Duplicated provisioning](#duplicated-provisioning)
+    - [Duplicated provisioning](#duplicated-provisioning)
 
 ## Prerequisites
 To run these examples the following must be configured on the local host:
