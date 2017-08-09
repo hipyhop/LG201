@@ -11,6 +11,7 @@ Table of contents
   - [Deploying the containers with vagrant](#deploying-the-containers-with-vagrant)
   - [Issues](#issues)
     - [Duplicated provisioning](#duplicated-provisioning)
+- [Improvements](#improvements)
 
 ## Prerequisites
 To run these examples the following must be configured on the local host:
@@ -105,3 +106,22 @@ The best way around it appears to be separating the spin-up and provisioning ste
 ```
 $ vagrant up --no-provision && vagrant provision
 ```
+
+## Improvements
+There are a number of possible improvements that could be added in the future to improve the efficiency and speed of builds, while simplifying the deployment stage.
+
+  - Kubernetes! Currently there is no orchestration. Deployment is manual using `vagrant up` or `vagrant provision`. Containers are restarted on failure, and the load balancer performs health checks to ensure the host is alive before routing traffic to it.
+  But Kubernetes would handle restarting the services on new hosts automatically if required.
+
+  - No logging or notifications in the current implementation. It's all good having a fail-over system, but nobody is notified about a failure, you may get to a point where all fail-over systems have failed, resulting in downtime.
+
+  - Vagrant is slower and more resource intensive than containers. The whole solution could be implemented with docker-compose or kubernetes more efficiently. However that's not what the solution asked for.
+
+  - Initial vagrant host provisioning time is quite slow. In a real-world scenario I would look into building a suitable Vagrant box with the latest updates and dependencies pre-installed to reduce provisioning time on each launch.
+
+  - The docker build stage doesn't go in to too much details about how this would work in a CI/CD pipeline. Given time I would:
+    - Keep a local cache of the git repository, to speed up clone/git pull times.
+    - mount the source directory into a docker container and run any tests in there.
+    - Build the docker image inside the container, by mounting the the host's docker socket to the CI container `docker run -v /var/run/docker.sock:/var/run/docker.sock ...`. This is much better than running docker-in-docker.
+
+  - The applications are stateless. Not data storage on the local filesystem or a database is required making this example reasonably trivial. 
