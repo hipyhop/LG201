@@ -24,9 +24,9 @@ The benefit of using virtualisation technologies here means it should work on ot
 
 For this example, a local docker registry will be used for speed and ease of development.
 
-This won't be covered by the ansible automation so will need to be setup before running any commands.
+This won't be covered by the Ansible automation so will need to be setup before running any commands.
 
-If you already have a suitable docker registry, go ahead and skip this step, but change the `docker_registry` variable in the ansible playbook files.
+If you already have a suitable docker registry, go ahead and skip this step, but change the `docker_registry` variable in the Ansible playbook files.
 
 To set up a docker registry on the host machine run
 
